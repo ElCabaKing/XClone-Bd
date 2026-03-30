@@ -1,0 +1,4 @@
+CREATE TABLE chat_room (
+    id INT PRIMARY KEY IDENTITY(1,1),
+    created_at DATETIME2 DEFAULT GETDATE()
+);
