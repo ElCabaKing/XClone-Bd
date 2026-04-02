@@ -1,7 +1,7 @@
 CREATE TABLE mute_list (
-    id INT PRIMARY KEY IDENTITY(1,1),
-    user_id INT NOT NULL,
-    muted_by INT NOT NULL,
+    id UNIQUEIDENTIFIER PRIMARY KEY DEFAULT NewID(),
+    user_id UNIQUEIDENTIFIER NOT NULL,
+    muted_by UNIQUEIDENTIFIER NOT NULL,
     created_at DATETIME2 DEFAULT GETDATE(),
     UNIQUE (user_id, muted_by),
     CONSTRAINT ck_mute_different_users CHECK (user_id != muted_by),

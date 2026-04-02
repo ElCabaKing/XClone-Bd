@@ -1,7 +1,7 @@
 CREATE TABLE messages (
-    id INT PRIMARY KEY IDENTITY(1,1),
-    chat_room_id INT NOT NULL,
-    sender_id INT NOT NULL,
+    id UNIQUEIDENTIFIER PRIMARY KEY DEFAULT NewID(),
+    chat_room_id UNIQUEIDENTIFIER NOT NULL,
+    sender_id UNIQUEIDENTIFIER NOT NULL,
     content NVARCHAR(MAX) NOT NULL,
     created_at DATETIME2 DEFAULT GETDATE(),
     is_read BIT DEFAULT 0,
