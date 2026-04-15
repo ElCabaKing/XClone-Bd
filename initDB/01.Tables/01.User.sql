@@ -6,17 +6,18 @@ CREATE TABLE user_status (
 
 CREATE TABLE user_role (
     id TINYINT PRIMARY KEY,
-    name NVARCHAR(50) NOT NULL UNIQUE
+    name NVARCHAR(50) NOT NULL UNIQUE,
+    description NVARCHAR(255) NULL
 );
 
 INSERT INTO user_status (id, name, description) VALUES
 (1, 'active', 'User is active and can interact with the platform'),
 (2, 'inactive', 'User is inactive (cannot interact)');
 
-INSERT INTO user_role (id, name) VALUES
-(1, 'admin'),
-(2, 'common_user'),
-(3, 'verified_user');
+INSERT INTO user_role (id, name, description) VALUES
+(1, 'admin', 'User has administrative privileges'),
+(2, 'common_user', 'User has standard privileges'),
+(3, 'verified_user', 'User has verified their identity');
 
 
 CREATE TABLE [user] (
