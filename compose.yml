@@ -1,6 +1,6 @@
 services:
   sqlserver:
-    build: .
+    image: mcr.microsoft.com/mssql/server:2022-latest
     container_name: sqlserver-db
     restart: always
     environment:
@@ -11,9 +11,6 @@ services:
       - "1433:1433"
     volumes:
       - sqlserver_data:/var/opt/mssql
-      - ./initDB:/initDB
-      - ./init.sh:/init.sh
-    command: /bin/bash /init.sh
 
   mongodb:
     image: mongo:7
