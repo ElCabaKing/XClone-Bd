@@ -31,8 +31,8 @@ CREATE TABLE [user] (
     email NVARCHAR(255) NOT NULL UNIQUE,
     password_hash NVARCHAR(255) NOT NULL,
     created_at DATETIME2 NOT NULL DEFAULT GETDATE(),
-    role_id TINYINT NOT NULL DEFAULT 2,
-    status_id TINYINT NOT NULL DEFAULT 1,
+    role_id TINYINT NULL DEFAULT 2,
+    status_id TINYINT NULL DEFAULT 1,
     first_name NVARCHAR(255) NOT NULL,
     last_name NVARCHAR(255) NOT NULL,
     profile_picture_url NVARCHAR(255) NULL,
@@ -236,6 +236,72 @@ CREATE TABLE [email_templates] (
 GO
 
 INSERT INTO [email_templates] ([name], [subject], [body]) VALUES
-('Welcome Email', 'Welcome to Our Service!', 'Dear {{first_name}},\n\nThank you for signing up for our service. We are excited to have you on board!\n\nBest regards,\nThe Team'),
-('Password Reset', 'Password Reset Request', 'Dear {{first_name}},\n\nWe received a request to reset your password. Please click the link below to reset your password:\n\n{{reset_link}}\n\nIf you did not request a password reset, please ignore this email.\n\nBest regards,\nThe Team');
+('Welcome Email', 'Welcome to Our Service!', '<div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; background-color: #f5f5f5; padding: 20px; border-radius: 8px;"><div style="background-color: #ffffff; padding: 30px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);"><p style="color: #333333; font-size: 16px; margin-bottom: 20px;">Dear {{first_name}},</p><p style="color: #555555; font-size: 14px; line-height: 1.6; margin-bottom: 20px;">Thank you for signing up for our service. We are excited to have you on board!</p><p style="color: #333333; font-size: 14px; margin-top: 30px; margin-bottom: 10px;">Best regards,</p><p style="color: #1a73e8; font-weight: bold; font-size: 14px;">The Team</p></div></div>'),
+('Password Reset', 'Password Reset Request', '<div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; background-color: #f5f5f5; padding: 20px; border-radius: 8px;"><div style="background-color: #ffffff; padding: 30px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);"><p style="color: #333333; font-size: 16px; margin-bottom: 20px;">Dear {{first_name}},</p><p style="color: #555555; font-size: 14px; line-height: 1.6; margin-bottom: 20px;">We received a request to reset your password. Please click the link below to reset your password:</p><div style="margin: 30px 0; text-align: center;"><a href="{{reset_link}}" style="background-color: #1a73e8; color: #ffffff; padding: 12px 30px; text-decoration: none; border-radius: 4px; display: inline-block; font-weight: bold;">Reset Password</a></div><p style="color: #999999; font-size: 12px; margin-top: 30px;">If you did not request a password reset, please ignore this email.</p><p style="color: #333333; font-size: 14px; margin-top: 30px; margin-bottom: 10px;">Best regards,</p><p style="color: #1a73e8; font-weight: bold; font-size: 14px;">The Team</p></div></div>');
 GO
+
+-- User Table Indexes
+CREATE INDEX idx_user_role_id ON [user](role_id);
+CREATE INDEX idx_user_status_id ON [user](status_id);
+CREATE INDEX idx_user_created_at ON [user](created_at);
+
+-- Post Table Indexes
+CREATE INDEX idx_post_user_id ON post(user_id);
+CREATE INDEX idx_post_created_at ON post(created_at DESC);
+CREATE INDEX idx_post_reply_to ON post(reply_to);
+CREATE INDEX idx_post_repost_of ON post(repost_of);
+CREATE INDEX idx_post_user_created ON post(user_id, created_at DESC);
+
+-- Survey Table Indexes
+CREATE INDEX idx_survey_post_id ON survey(post_id);
+
+-- Ban List Indexes
+CREATE INDEX idx_ban_list_user_id ON ban_list(user_id);
+CREATE INDEX idx_ban_list_banned_by ON ban_list(banned_by);
+
+-- Mute List Indexes
+CREATE INDEX idx_mute_list_user_id ON mute_list(user_id);
+CREATE INDEX idx_mute_list_muted_by ON mute_list(muted_by);
+
+-- Follow List Indexes
+CREATE INDEX idx_follow_list_follower_id ON follow_list(follower_id);
+CREATE INDEX idx_follow_list_following_id ON follow_list(following_id);
+
+-- Like List Indexes
+CREATE INDEX idx_like_list_user_id ON like_list(user_id);
+CREATE INDEX idx_like_list_post_id ON like_list(post_id);
+
+-- Comment List Indexes
+CREATE INDEX idx_comment_list_user_id ON comment_list(user_id);
+CREATE INDEX idx_comment_list_post_id ON comment_list(post_id);
+CREATE INDEX idx_comment_list_comment_to ON comment_list(comment_to);
+CREATE INDEX idx_comment_list_post_user ON comment_list(post_id, user_id);
+
+-- Comment Like List Indexes
+CREATE INDEX idx_comment_like_list_user_id ON comment_like_list(user_id);
+CREATE INDEX idx_comment_like_list_comment_id ON comment_like_list(comment_id);
+
+-- Hashtags Indexes
+CREATE INDEX idx_hashtags_name ON hashtags(name);
+
+-- Hashtag Post Indexes
+CREATE INDEX idx_hashtag_post_hashtag_id ON hashtag_post(hashtag_id);
+CREATE INDEX idx_hashtag_post_post_id ON hashtag_post(post_id);
+
+-- Chat Participants Indexes
+CREATE INDEX idx_chat_participants_user_id ON chat_participants(user_id);
+
+-- Messages Indexes
+CREATE INDEX idx_messages_chat_room_id ON messages(chat_room_id);
+CREATE INDEX idx_messages_sender_id ON messages(sender_id);
+CREATE INDEX idx_messages_is_read ON messages(is_read);
+CREATE INDEX idx_messages_chat_created ON messages(chat_room_id, created_at DESC);
+
+-- Notifications Indexes
+CREATE INDEX idx_notifications_user_id ON notifications(user_id);
+CREATE INDEX idx_notifications_is_read ON notifications(is_read);
+CREATE INDEX idx_notifications_user_read ON notifications(user_id, is_read);
+CREATE INDEX idx_notifications_created_at ON notifications(created_at DESC);
+
+-- Token Indexes
+CREATE INDEX idx_token_user_id ON [token](user_id);
