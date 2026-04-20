@@ -213,17 +213,6 @@ CREATE TABLE notifications (
 );
 GO
 
--- token
-CREATE TABLE [token] (
-    id UNIQUEIDENTIFIER PRIMARY KEY,
-    user_id UNIQUEIDENTIFIER NOT NULL,
-    refresh_token NVARCHAR(255) NOT NULL UNIQUE,
-    expires_at DATETIME2 NOT NULL,
-    created_at DATETIME2 NOT NULL DEFAULT GETDATE(),
-    CONSTRAINT FK_Token_User FOREIGN KEY (user_id) REFERENCES [user](id)
-);
-GO
-
 -- email_templates
 CREATE TABLE [email_templates] (
     [id] INT IDENTITY(1,1) PRIMARY KEY,
@@ -303,5 +292,3 @@ CREATE INDEX idx_notifications_is_read ON notifications(is_read);
 CREATE INDEX idx_notifications_user_read ON notifications(user_id, is_read);
 CREATE INDEX idx_notifications_created_at ON notifications(created_at DESC);
 
--- Token Indexes
-CREATE INDEX idx_token_user_id ON [token](user_id);

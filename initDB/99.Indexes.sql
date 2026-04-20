@@ -61,5 +61,3 @@ CREATE INDEX idx_notifications_is_read ON notifications(is_read);
 CREATE INDEX idx_notifications_user_read ON notifications(user_id, is_read);
 CREATE INDEX idx_notifications_created_at ON notifications(created_at DESC);
 
--- Token Indexes
-CREATE INDEX idx_token_user_id ON [token](user_id);

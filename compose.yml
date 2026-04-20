@@ -12,6 +12,34 @@ services:
     volumes:
       - sqlserver_data:/var/opt/mssql
 
+  redis:
+    image: redis:7-alpine
+    container_name: redisXClone
+    ports:
+      - "6380:6379"
+    environment:
+      REDIS_PASSWORD: "cambia_esto_por_una_password_segura"
+    command:
+      - sh
+      - -c
+      - |
+        redis-server --appendonly yes --requirepass "$$REDIS_PASSWORD"
+    volumes:
+      - redis_data:/data
+    restart: unless-stopped
+
+    
+  redisinsight:
+    image: redis/redisinsight:latest
+    container_name: redisinsightXClone
+    ports:
+      - "5540:5540"
+    volumes:
+      - redisinsight_data:/data
+    restart: unless-stopped
+    depends_on:
+      - redis
+  
   mongodb:
     image: mongo:7
     container_name: mongodb
@@ -24,3 +52,5 @@ services:
 volumes:
   sqlserver_data:
   mongodb_data:
+  redis_data:
+  redisinsight_data:

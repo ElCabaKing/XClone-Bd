@@ -1,9 +1,0 @@
-
-CREATE TABLE [token] (
-    id UNIQUEIDENTIFIER PRIMARY KEY,
-    user_id UNIQUEIDENTIFIER NOT NULL,
-    refresh_token NVARCHAR(255) NOT NULL UNIQUE,
-    expires_at DATETIME2 NOT NULL,
-    created_at DATETIME2 NOT NULL DEFAULT GETDATE(),
-    CONSTRAINT FK_Token_User FOREIGN KEY (user_id) REFERENCES [user](id)
-);
